@@ -14,6 +14,7 @@
 #include <process.h>
 #include <QThread>
 #include <QDir>
+#include <install.h>
 
 namespace Ui {
 class MainWindow;
@@ -33,12 +34,17 @@ private slots:
     void About();
     void Start();
     void TransmitFindLink(QString link);
+    void test(QString name){
+        qDebug() << "Recept signal install " << name;
+    }
+    void EndInstall(QString name,int exitcode);
 
 
 private:
     Ui::MainWindow *ui;
-    Download down;
+    Download *down;
     Process *process;
+    Install *install;
 };
 
 #endif // MAINWINDOW_H

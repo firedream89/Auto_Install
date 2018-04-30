@@ -8,6 +8,7 @@ QT       += core gui
 QT       += network
 QT       += webenginewidgets
 
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Auto_Install
@@ -29,12 +30,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     options.cpp \
     download.cpp \
-    process.cpp
+    process.cpp \
+    install.cpp
 
 HEADERS  += mainwindow.h \
     options.h \
     download.h \
-    process.h
+    process.h \
+    install.h
 
 FORMS    += mainwindow.ui \
     options.ui \

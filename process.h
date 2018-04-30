@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QDebug>
 #include <QTimer>
+#include <math.h>
 
 namespace Ui {
 class Process;
@@ -25,6 +26,9 @@ public slots:
     void ChangeMaxProgress(int max);
     void Reset();
     void Loading();
+    void loadProgress(int load);
+    void SetDownRow(QString text, bool nRow);
+    void SetInstallRow();
 
 signals:
     void loading();
@@ -32,6 +36,8 @@ signals:
 private:
     Ui::Process *ui;
     bool load;
+    int downRow;
+    int installRow;
 };
 
 #endif // PROCESS_H

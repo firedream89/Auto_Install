@@ -10,6 +10,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     process = new Process(this);
+    down = new Download;
+    QThread *thread = new QThread(this);
+    install = new Install;
+    connect(thread,SIGNAL(started()),install,SLOT(run()));
+    install->moveToThread(thread);
+    thread->start();
+
+
     Init();
     QDir dir;
     dir.mkdir("Temp");
@@ -18,10 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionA_Propos_de_Qt,SIGNAL(triggered(bool)),qApp,SLOT(aboutQt()));
     connect(ui->actionA_Propos,SIGNAL(triggered(bool)),this,SLOT(About()));
     connect(ui->Start,SIGNAL(clicked(bool)),this,SLOT(Start()));
+    connect(ui->actionQuitter,SIGNAL(triggered(bool)),qApp,SLOT(quit()));
 
-    connect(&down,SIGNAL(SendText(QString,bool)),process,SLOT(AddText(QString,bool)));
-    connect(&down,SIGNAL(DownProgress(qint64,qint64)),process,SLOT(DownProgress(qint64,qint64)));
-    connect(&down,SIGNAL(NextProgress(QString)),process,SLOT(Progress()));
+    connect(down,SIGNAL(SendText(QString,bool)),process,SLOT(AddText(QString,bool)));
+    connect(down,SIGNAL(SendText(QString,bool)),process,SLOT(SetDownRow(QString,bool)));
+    connect(down,SIGNAL(DownProgress(qint64,qint64)),process,SLOT(DownProgress(qint64,qint64)));
+    connect(down,SIGNAL(NextProgress(QString)),process,SLOT(Progress()));
+    connect(down,SIGNAL(SendInstall(QString)),install,SLOT(AddAppli(QString)));
+    connect(down,SIGNAL(SendInstall(QString)),this,SLOT(test(QString)));
+    connect(down,SIGNAL(LoadProgress(int)),process,SLOT(loadProgress(int)));
+    connect(install,SIGNAL(Finish(QString,int)),this,SLOT(EndInstall(QString,int)));
+
 }
 
 MainWindow::~MainWindow()
@@ -82,13 +97,14 @@ void MainWindow::Init()
             }
         }
     }
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::Show_Options()
 {
     Options *o = new Options(this);
     connect(o,SIGNAL(findLink(QString)),this,SLOT(TransmitFindLink(QString)));
-    connect(&down,SIGNAL(FindingLink(QString,QString)),o,SLOT(ReceptLink(QString,QString)));
+    connect(down,SIGNAL(FindingLink(QString,QString)),o,SLOT(ReceptLink(QString,QString)));
     o->show();
 }
 
@@ -130,11 +146,22 @@ void MainWindow::Start()
     process->Reset();
     process->show();
     process->ChangeMaxProgress(list.count());
+    qDebug() << down->thread() << this->thread();
 
-    down.Start(list);
+    down->SetList(list);
+    down->StartDown(list);
+    qDebug() << down->thread();
 }
 
 void MainWindow::TransmitFindLink(QString link)
 {
-    down.FindLink(link);
+    down->FindLink(link);
+}
+
+void MainWindow::EndInstall(QString name, int exitcode)
+{
+    if(exitcode == 0)
+        process->AddText("Installation de " + name + " terminé avec succès",true);
+    else
+        process->AddText("Installation de " + name + " échoué",true);
 }

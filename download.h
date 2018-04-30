@@ -4,6 +4,7 @@
 #include <QWebEngineView>
 #include <QWebEngineProfile>
 #include <QWebEngineDownloadItem>
+#include <QWebEngineSettings>
 #include <QObject>
 #include <QEventLoop>
 #include <QThread>
@@ -14,20 +15,21 @@ enum status
 {
     no_Error,
     progress,
-    Finish,
-    error
+    finished,
+    error,
+    prepare
 };
 
-class Download : public QThread
+class Download : public QObject
 {
     Q_OBJECT
 public:
-    void run();
     Download();
-    void Start(QStringList link);
+    void StartDown(QStringList link);
     void Stop();
     void RemoveOne(QStringList link);
     bool SaveHtml();
+    void SetList(QStringList list);
 
 public slots:
     void FindLink(QString name);
@@ -38,6 +40,8 @@ signals:
     void Finished(QString state);
     void SendText(QString text,bool newRow = false);
     void FindingLink(QString name,QString link);
+    void SendInstall(QString link);
+    void LoadProgress(int load);
 
 private slots:
     void StartDownload(QWebEngineDownloadItem *down);
@@ -49,6 +53,8 @@ private:
     QString actual;
     QEventLoop loop;
     int statusDown;
+    QStringList list;
+    QTimer timer;
 };
 
 #endif // DOWNLOAD_H
