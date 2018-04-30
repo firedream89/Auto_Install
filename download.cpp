@@ -66,7 +66,7 @@ void Download::StartDown(QStringList link)
             }
         }
         else {
-            emit SendText("Finished");
+            emit SendText("Terminé");
             emit SendInstall("Temp/" + actual);
             emit NextProgress(actual);
             link.removeFirst();
@@ -201,10 +201,10 @@ QStringList Download::PrepareDownload(QStringList list)
             if(line.contains("downloadUrl")) {
                 if(line.split("\"").count() >= 6) {
                     finalList.append(name + "|http://www.clubic.com" + line.split("\"").at(5));
-                    emit SendText("Finished");
+                    emit SendText("Terminé");
                 }
                 else {
-                    emit SendText("Fail");
+                    emit SendText("Echec");
                 }
                 break;
             }

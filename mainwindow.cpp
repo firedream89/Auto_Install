@@ -114,7 +114,7 @@ void MainWindow::About()
     QLabel vVersion(version);
     QLabel auteur("Kévin BRIAND");
     QLabel licence("Ce logiciel est sous licence GNU LGPLv3");
-    QLabel github("<a href='https://github.com/firedream89/DealeurGame'>ici</a>");
+    QLabel github("<a href='https://github.com/firedream89/Auto_Install'>ici</a>");
     github.setOpenExternalLinks(true);
     layout->addRow("Version",&vVersion);
     layout->addRow("Auteur",&auteur);

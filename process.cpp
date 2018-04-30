@@ -12,8 +12,6 @@ Process::Process(QWidget *parent,int nbAppli) :
     ui->ProgressBar->setValue(0);
     ui->ShowText->clear();
     load = false;
-
-    //connect(this,SIGNAL(loading()),this,SLOT(Loading()));
 }
 
 Process::~Process()

@@ -29,17 +29,17 @@ Options::~Options()
 
 void Options::LoadFile()
 {
-    AddCmd("Load File...");
+    AddCmd("Chargement fichier...");
     ui->ShowFile->clear();
 
     QFile f("Config.txt");
     if(!f.open(QIODevice::ReadOnly)) {
-        AddCmd("Load File...Echec",true);
+        AddCmd("Chargement fichier...Echec",true);
     }
     else {
         QTextStream flux(&f);
         ui->ShowFile->insertPlainText(flux.readAll());
-        AddCmd("Load File...Ok",true);
+        AddCmd("Chargement fichier...Ok",true);
     }
 }
 
@@ -62,7 +62,7 @@ void Options::AddItem()
     }
     QFile f("Config.txt");
     if(!f.open(QIODevice::ReadWrite)) {
-        AddCmd("Echec open file");
+        AddCmd("Ouverture fichier échouée");
     }
     else {
         int item = 0;
@@ -173,7 +173,7 @@ void Options::UpdateFile()
 
 void Options::ReceptLink(QString name, QString link)
 {
-    AddCmd(ui->Cmd->item(ui->Cmd->count()-1)->text() + "Finished",true);
+    AddCmd(ui->Cmd->item(ui->Cmd->count()-1)->text() + "Terminé",true);
     if(link.isEmpty() || link == "http://www.clubic.com") {
         AddCmd("Aucun lien trouvé");
     }
@@ -211,7 +211,7 @@ void Options::Loading()
         timer.start(50);
         loop.exec();
     }
-    ui->Cmd->item(ui->Cmd->count()-2)->setText(tmp + " Finished");
+    ui->Cmd->item(ui->Cmd->count()-2)->setText(tmp + " Terminé");
 }
 
 void Options::DownProgress(qint64 actual, qint64 max)
